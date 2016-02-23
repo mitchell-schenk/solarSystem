@@ -45,14 +45,15 @@ void ofApp::update(){
  
     //accelerate and move planets
     for(int i = 0; i < planets.size(); i++){
+        planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
+        planets[i].move();//move planets
         indexes = planets[i].collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
         if(indexes.size() != 0){
             for(int z = 0; z < indexes.size(); z++){
                 planets.erase(planets.begin()+(indexes[z]));//delete planet or planets that collided from vector
             }
         }
-        planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
-        planets[i].move();//move planets
+        
     }
 }
 
