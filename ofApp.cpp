@@ -10,7 +10,7 @@ std::vector<Planet> planets;
 std::vector<Sun> suns;
 std::vector<int> indexes;
 
-vector<int> collisionCheck(vector<Planet> planets, vector<Sun> suns, int index);
+
 int startX;
 int startY;
 
@@ -45,7 +45,7 @@ void ofApp::update(){
  
     //accelerate and move planets
     for(int i = 0; i < planets.size(); i++){
-        indexes = collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
+        indexes = planets[i].collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
         if(indexes.size() != 0){
             for(int z = 0; z < indexes.size(); z++){
                 planets.erase(planets.begin()+(indexes[z]));//delete planet or planets that collided from vector
@@ -140,6 +140,7 @@ void ofApp::dragEvent(ofDragInfo dragInfo){
 
 }
 //add to Planet or Sun???
+/*
 vector<int> collisionCheck(vector<Planet> planets, vector<Sun> suns, int index){
     vector<int> spots;
     bool destroyed = false;
@@ -167,5 +168,5 @@ vector<int> collisionCheck(vector<Planet> planets, vector<Sun> suns, int index){
             }
         }
     return spots;
-
 }
+*/

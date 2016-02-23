@@ -79,3 +79,33 @@ void Planet::move(){
     xPos += xVel;
     yPos += yVel;
 }
+
+vector<int> Planet::collisionCheck(vector<Planet> planets, vector<Sun> suns, int index){
+    vector<int> spots;
+    bool destroyed = false;
+    
+    for(int o = 0; o < planets.size(); o++){
+        if(o != index){
+            if(sqrt(pow(planets[index].xPos-planets[o].xPos,2) + pow(planets[index].yPos - planets[o].yPos,2)
+                    ) < (planets[index].radius + planets[o].radius)){
+                spots.push_back(index);
+                destroyed = true;
+                if(index > o){
+                    spots.push_back(o);
+                }
+                else if(index < o){
+                    spots.push_back((o-1));
+                }
+            }
+        }
+    }
+    for(int o = 0; o < suns.size(); o++){
+        if(sqrt(pow(planets[index].xPos-suns[o].xPos,2) + pow(planets[index].yPos - suns[o].yPos,2)) < (planets[index].radius + suns[o].radius)){
+            if(destroyed== false){
+                spots.push_back(index);
+            }
+        }
+    }
+    return spots;
+}
+
