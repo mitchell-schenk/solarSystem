@@ -35,11 +35,8 @@ Sun::~Sun(){
 //Planet constructor
 Planet::Planet(double xVelocity, double yVelocity, double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue) : Body( xPosition,  yPosition,  bodyMass, bodyRadius,  colorRed, colorGreen,  colorBlue){
     
-    
     xVel = xVelocity;
     yVel = yVelocity;
-
-    
 }
 
 //Planet destructor
@@ -53,8 +50,8 @@ void Planet::acc(vector<Planet> planets, vector<Sun> suns, int num){
     for(int i = 0; i < planets.size(); i++ ){
         //dont accelerate it on itself
         if(i != num){
-            xAcc = sin(atan2((planets[i].xPos-xPos),(planets[i].yPos-yPos))) * (planets[num].mass * planets[i].mass * pow(10,-10))/(pow(planets[i].xPos-xPos,2) + pow(planets[i].yPos - yPos,2));
-            yAcc = cos(atan2((planets[i].xPos-xPos),(planets[i].yPos-yPos))) * (planets[num].mass * planets[i].mass * pow(10,-10))/(pow(planets[i].xPos-xPos,2) + pow(planets[i].yPos - yPos,2));
+            xAcc = sin(atan2((planets[i].xPos-xPos),(planets[i].yPos-yPos))) * (planets[num].mass * planets[i].mass * pow(10,-8))/(pow(planets[i].xPos-xPos,2) + pow(planets[i].yPos - yPos,2));
+            yAcc = cos(atan2((planets[i].xPos-xPos),(planets[i].yPos-yPos))) * (planets[num].mass * planets[i].mass * pow(10,-8))/(pow(planets[i].xPos-xPos,2) + pow(planets[i].yPos - yPos,2));
             
             xVel += xAcc;
             yVel += yAcc;

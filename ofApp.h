@@ -1,6 +1,9 @@
 #pragma once
 
 #include "ofMain.h"
+#include "ofxBaseGui.h"
+#include "ofxPanel.h"
+#include "ofxInputField.h"
 
 
 
@@ -22,6 +25,15 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+        int timeScale;
+        int startX;
+        int startY;
+        int currentMass;
+        void planetMassChanged(int & massInput);
+        //UI elements
+        ofxPanel planetGeneration;
+        ofxFloatField massInput;
+    
 };
 
 

@@ -11,14 +11,24 @@ std::vector<Sun> suns;
 std::vector<int> indexes;
 
 
-int startX;
-int startY;
+
 
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-     //set background to black
-     ofBackground(0,0,0);
+    
+    //massInput.addListener(this, &ofApp::planetMassChanged);
+    
+    //set background to black
+    ofBackground(0,0,0);
+    timeScale = 2;
+    
+    //setup UI
+    planetGeneration.setup();
+    planetGeneration.add(massInput.setup("Planet Mass", 2000));
+    
+    currentMass = massInput;
+    
     
     //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
     Planet earth(0, 1.5, 700,400,2000, 5, 255, 0, 0);
@@ -40,20 +50,26 @@ void ofApp::setup(){
 
 }
 
+void ofApp::planetMassChanged(int &massInput){
+     currentMass= (massInput);
+}
+
 //--------------------------------------------------------------
 void ofApp::update(){
- 
+    currentMass = massInput;
     //accelerate and move planets
-    for(int i = 0; i < planets.size(); i++){
-        planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
-        planets[i].move();//move planets
-        indexes = planets[i].collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
-        if(indexes.size() != 0){
-            for(int z = 0; z < indexes.size(); z++){
-                planets.erase(planets.begin()+(indexes[z]));//delete planet or planets that collided from vector
+    for(int i = 0; i < timeScale; i++){
+        for(int i = 0; i < planets.size(); i++){
+        
+            planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
+            planets[i].move();//move planets
+            indexes = planets[i].collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
+            if(indexes.size() != 0){
+                for(int z = 0; z < indexes.size(); z++){
+                    planets.erase(planets.begin()+(indexes[z]));//delete planet or planets that collided from vector
+                }
             }
         }
-        
     }
 }
 
@@ -62,6 +78,12 @@ void ofApp::draw(){
     
     //draw framerate
     ofDrawBitmapString(ofGetFrameRate(),50,10);
+    //ofDrawBitmapString(currentMass,50,30);
+    
+    //draw UI elements
+    planetGeneration.draw();
+    massInput.draw();
+    
     //draw planets
     for(int i = 0; i < planets.size(); i++)
     {
@@ -111,7 +133,7 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     //create plannet on mouse release
     //need to set velocity as function of a drag or something currently fixed
-    Planet mars3( 2, 0, x, y, 2000, 5, 0, 255, 0);
+    Planet mars3( 2, 0, x, y, currentMass, 5, 0, 255, 0);
     planets.push_back(mars3);
     mars3.~Planet();
 }
