@@ -4,7 +4,7 @@
 #include "ofxBaseGui.h"
 #include "ofxPanel.h"
 #include "ofxInputField.h"
-
+//#include <math.h>
 
 
 class ofApp : public ofBaseApp{
@@ -26,13 +26,16 @@ class ofApp : public ofBaseApp{
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
         int timeScale;
-        int startX;
-        int startY;
+        int startX,startY,otherX,otherY;
+        float tempX, tempY, ratio; //for planet generation velocity
+        float lineX,lineY;
         int currentMass;
+        bool mouseDown, maxLength;
         void planetMassChanged(int & massInput);
         //UI elements
         ofxPanel planetGeneration;
         ofxFloatField massInput;
+        int maxDrag;
     
 };
 

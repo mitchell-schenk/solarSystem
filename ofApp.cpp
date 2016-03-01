@@ -1,7 +1,7 @@
 #include "ofApp.h"
 #include "orbits.h"
 #include <stdio.h>
-#include <math.h>
+//#include <math.h>
 #include <iostream>
 #include <vector>
 
@@ -21,13 +21,15 @@ void ofApp::setup(){
     
     //set background to black
     ofBackground(0,0,0);
-    timeScale = 2;
+    ofSetFrameRate(60);
+    timeScale = 1;
     
     //setup UI
     planetGeneration.setup();
     planetGeneration.add(massInput.setup("Planet Mass", 2000));
     
     currentMass = massInput;
+    maxLength = false;
     
     
     //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
@@ -51,7 +53,7 @@ void ofApp::setup(){
 }
 
 void ofApp::planetMassChanged(int &massInput){
-     currentMass= (massInput);
+     currentMass = (massInput);
 }
 
 //--------------------------------------------------------------
@@ -77,7 +79,7 @@ void ofApp::update(){
 void ofApp::draw(){
     
     //draw framerate
-    ofDrawBitmapString(ofGetFrameRate(),50,10);
+    ofDrawBitmapString(ofGetFrameRate(),730,15);
     //ofDrawBitmapString(currentMass,50,30);
     
     //draw UI elements
@@ -98,6 +100,16 @@ void ofApp::draw(){
         ofDrawCircle(suns[i].xPos, suns[i].yPos, suns[i].radius);
         
     }
+    if(mouseDown){
+        if(maxLength){
+            ofSetColor(255,0,0);
+        }
+        else{
+        ofSetColor(0,0,255);
+        }
+    
+        ofDrawLine(startX,startY,otherX,otherY);
+    }
     
 }
 
@@ -113,12 +125,37 @@ void ofApp::keyReleased(int key){
 
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
+    
 
 }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
-
+    if(mouseDown){
+        otherX = x;
+        otherY = y;
+    }
+    /*
+    lineX = startX - otherX;
+    lineY = startX - otherY;
+     */
+    
+    
+     if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 300){
+         //mouseDown = false;
+         maxLength = true;
+         //ratio = 300/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
+         //lineX = (startX - otherX) *  ratio;
+        // lineY = (startY - otherY) *  ratio;
+     }
+     else{
+         
+         maxLength = false;
+     }
+    
+    
+    
+   
 }
 
 //--------------------------------------------------------------
@@ -126,6 +163,9 @@ void ofApp::mousePressed(int x, int y, int button){
     //start of drag for creating a plannet
     startX = x;
     startY = y;
+    otherX = x;
+    otherY = y;
+    mouseDown = true;
 }
 
 //--------------------------------------------------------------
@@ -133,9 +173,25 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     //create plannet on mouse release
     //need to set velocity as function of a drag or something currently fixed
-    Planet mars3( 2, 0, x, y, currentMass, 5, 0, 255, 0);
+    
+
+    if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 300){
+        mouseDown = false;
+        ratio = 300/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
+        tempX = (startX - otherX) * .05 * ratio;
+        tempY = (startY - otherY) * .05 * ratio;
+    }
+    else{
+        tempX = (startX - otherX) * .05;
+        tempY = (startY - otherY) * .05;
+    }
+    
+    
+    
+    Planet mars3( tempX, tempY, startX, startY, currentMass, 5, 0, 255, 0);
     planets.push_back(mars3);
     mars3.~Planet();
+    mouseDown = false;
 }
 
 //--------------------------------------------------------------
@@ -162,34 +218,3 @@ void ofApp::gotMessage(ofMessage msg){
 void ofApp::dragEvent(ofDragInfo dragInfo){ 
 
 }
-//add to Planet or Sun???
-/*
-vector<int> collisionCheck(vector<Planet> planets, vector<Sun> suns, int index){
-    vector<int> spots;
-    bool destroyed = false;
-    
-    for(int o = 0; o < planets.size(); o++){
-        if(o != index){
-            if(sqrt(pow(planets[index].xPos-planets[o].xPos,2) + pow(planets[index].yPos - planets[o].yPos,2)
-                ) < (planets[index].radius + planets[o].radius)){
-                spots.push_back(index);
-                destroyed = true;
-                if(index > o){
-                    spots.push_back(o);
-                }
-                else if(index < o){
-                    spots.push_back((o-1));
-                }
-            }
-        }
-    }
-    for(int o = 0; o < suns.size(); o++){
-        if(sqrt(pow(planets[index].xPos-suns[o].xPos,2) + pow(planets[index].yPos - suns[o].yPos,2)) < (planets[index].radius + suns[o].radius)){
-                if(destroyed== false){
-                    spots.push_back(index);
-                }
-            }
-        }
-    return spots;
-}
-*/
