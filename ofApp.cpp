@@ -1,6 +1,8 @@
 #include "ofApp.h"
 #include "orbits.h"
 #include <stdio.h>
+#include <stdlib.h>
+#include <time.h>
 //#include <math.h>
 #include <iostream>
 #include <vector>
@@ -186,9 +188,12 @@ void ofApp::mouseReleased(int x, int y, int button){
         tempY = (startY - otherY) * .05;
     }
     
-    
-    
-    Planet mars3( tempX, tempY, startX, startY, currentMass, 5, 0, 255, 0);
+	srand(time(NULL));
+	int red, green, blue;
+	red = rand() % 255 + 1;
+	green = rand() % 255 + 1;
+	blue = rand() % 255 + 1;
+    Planet mars3( tempX, tempY, startX, startY, currentMass, 5, red, green, blue);
     planets.push_back(mars3);
     mars3.~Planet();
     mouseDown = false;
