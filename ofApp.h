@@ -1,9 +1,10 @@
 #pragma once
 
 #include "ofMain.h"
-#include "ofxBaseGui.h"
-#include "ofxPanel.h"
+#include "ofxGui.h"
 #include "ofxInputField.h"
+
+
 //#include <math.h>
 
 
@@ -32,10 +33,15 @@ class ofApp : public ofBaseApp{
         int currentMass;
         bool mouseDown, maxLength;
         void planetMassChanged(int & massInput);
+        void buttonPressed();
+    
         //UI elements
         ofxPanel planetGeneration;
         ofxFloatField massInput;
         int maxDrag;
+        string tempS;
+    
+        ofxButton button;
     
 };
 

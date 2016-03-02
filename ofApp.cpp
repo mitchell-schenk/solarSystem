@@ -19,16 +19,22 @@ std::vector<int> indexes;
 //--------------------------------------------------------------
 void ofApp::setup(){
     
+    
     //massInput.addListener(this, &ofApp::planetMassChanged);
+    button.addListener(this, &ofApp::buttonPressed);//button listener
     
     //set background to black
     ofBackground(0,0,0);
     ofSetFrameRate(60);
     timeScale = 1;
     
+    //tempS = "Speed: 33"+std::to_string(timeScale);
+    
     //setup UI
     planetGeneration.setup();
     planetGeneration.add(massInput.setup("Planet Mass", 2000));
+    planetGeneration.add(button.setup("Speed: "+std::to_string(timeScale)));
+    
     
     currentMass = massInput;
     maxLength = false;
@@ -60,21 +66,23 @@ void ofApp::planetMassChanged(int &massInput){
 
 //--------------------------------------------------------------
 void ofApp::update(){
+    
     currentMass = massInput;
+    
     //accelerate and move planets
     for(int i = 0; i < timeScale; i++){
         for(int i = 0; i < planets.size(); i++){
-        
-            planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
-            planets[i].move();//move planets
             indexes = planets[i].collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
             if(indexes.size() != 0){
                 for(int z = 0; z < indexes.size(); z++){
                     planets.erase(planets.begin()+(indexes[z]));//delete planet or planets that collided from vector
                 }
             }
+            planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
+            planets[i].move();//move planets
         }
     }
+    
 }
 
 //--------------------------------------------------------------
@@ -114,6 +122,22 @@ void ofApp::draw(){
     }
     
 }
+//--------------------------------------------------------------
+void ofApp::buttonPressed(){
+    
+    if(timeScale < 3){
+        timeScale++;
+    }
+    else{
+        timeScale = 1;
+    }
+    /*
+    tempS = "Speed: "+std::to_string(timeScale);
+    button.setName(tempS);
+    button.draw();
+     */
+    
+}
 
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
@@ -143,15 +167,10 @@ void ofApp::mouseDragged(int x, int y, int button){
      */
     
     
-     if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 300){
-         //mouseDown = false;
+     if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 200){
          maxLength = true;
-         //ratio = 300/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
-         //lineX = (startX - otherX) *  ratio;
-        // lineY = (startY - otherY) *  ratio;
      }
      else{
-         
          maxLength = false;
      }
     
@@ -175,17 +194,16 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     //create plannet on mouse release
     //need to set velocity as function of a drag or something currently fixed
-    
 
-    if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 300){
+    if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 200){
         mouseDown = false;
-        ratio = 300/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
-        tempX = (startX - otherX) * .05 * ratio;
-        tempY = (startY - otherY) * .05 * ratio;
+        ratio = 200/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
+        tempX = (startX - otherX) * .03 * ratio;
+        tempY = (startY - otherY) * .03 * ratio;
     }
     else{
-        tempX = (startX - otherX) * .05;
-        tempY = (startY - otherY) * .05;
+        tempX = (startX - otherX) * .03;
+        tempY = (startY - otherY) * .03;
     }
     
 	srand(time(NULL));
