@@ -11,6 +11,7 @@
 #include "ofApp.h"
 
 //Body constructor
+//-----------------------------------------------------------------
 Body::Body(double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue){
     xPos = xPosition;
     yPos = yPosition;
@@ -23,16 +24,19 @@ Body::Body(double xPosition, double yPosition, double bodyMass, double bodyRadiu
 
 
 //Sun constructor
+//-----------------------------------------------------------------
 Sun::Sun(double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue) : Body( xPosition,  yPosition, bodyMass, bodyRadius, colorRed, colorGreen, colorBlue){
   
 }
 
 //Sun destructor
+//-----------------------------------------------------------------
 Sun::~Sun(){
     
 }
 
 //Planet constructor
+//-----------------------------------------------------------------
 Planet::Planet(double xVelocity, double yVelocity, double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue) : Body( xPosition,  yPosition,  bodyMass, bodyRadius,  colorRed, colorGreen,  colorBlue){
     
     xVel = xVelocity;
@@ -40,18 +44,20 @@ Planet::Planet(double xVelocity, double yVelocity, double xPosition, double yPos
 }
 
 //Planet destructor
+//-----------------------------------------------------------------
 Planet::~Planet(){
     
 }
 
 //Accelerate planets
+//-----------------------------------------------------------------
 void Planet::acc(vector<Planet> planets, vector<Sun> suns, int num){
     //accelerate planet on other planets
-    for(int i = 0; i < planets.size(); i++ ){
+    for(int ii = 0; ii < planets.size(); ii++ ){
         //dont accelerate it on itself
-        if(i != num){
-            xAcc = sin(atan2((planets[i].xPos-xPos),(planets[i].yPos-yPos))) * (planets[num].mass * planets[i].mass * pow(10,-8))/(pow(planets[i].xPos-xPos,2) + pow(planets[i].yPos - yPos,2));
-            yAcc = cos(atan2((planets[i].xPos-xPos),(planets[i].yPos-yPos))) * (planets[num].mass * planets[i].mass * pow(10,-8))/(pow(planets[i].xPos-xPos,2) + pow(planets[i].yPos - yPos,2));
+        if(ii != num){
+            xAcc = sin(atan2((planets[ii].xPos - xPos), (planets[ii].yPos - yPos))) * (planets[num].mass * planets[ii].mass * pow(10, -8)) / (pow(planets[ii].xPos - xPos,2) + pow(planets[ii].yPos - yPos,2));
+            yAcc = cos(atan2((planets[ii].xPos - xPos), (planets[ii].yPos - yPos))) * (planets[num].mass * planets[ii].mass * pow(10, -8))/(pow(planets[ii].xPos - xPos,2) + pow(planets[ii].yPos - yPos,2));
             
             xVel += xAcc;
             yVel += yAcc;
@@ -59,50 +65,52 @@ void Planet::acc(vector<Planet> planets, vector<Sun> suns, int num){
         
     }
     //accelerate planets on sun(s)
-    for(int i = 0; i < suns.size(); i++ ){
-        
-        
-            xAcc = sin(atan2((suns[i].xPos-xPos),(suns[i].yPos-yPos))) * (planets[num].mass * suns[i].mass * pow(10,-10))/(pow(suns[i].xPos-xPos,2) + pow(suns[i].yPos - yPos,2));
-            yAcc = cos(atan2((suns[i].xPos-xPos),(suns[i].yPos-yPos))) * (planets[num].mass * suns[i].mass * pow(10,-10))/(pow(suns[i].xPos-xPos,2) + pow(suns[i].yPos - yPos,2));
-            
+    for(int ii = 0; ii < suns.size(); ii++ ){
+            xAcc = sin(atan2((suns[ii].xPos - xPos),(suns[ii].yPos - yPos))) * (planets[num].mass * suns[ii].mass * pow(10, -10))/(pow(suns[ii].xPos - xPos, 2) + pow(suns[ii].yPos - yPos,2));
+            yAcc = cos(atan2((suns[ii].xPos - xPos),(suns[ii].yPos - yPos))) * (planets[num].mass * suns[ii].mass * pow(10, -10))/(pow(suns[ii].xPos-xPos,2) + pow(suns[ii].yPos - yPos, 2));
             xVel += xAcc;
             yVel += yAcc;
-        
-        
     }
 }
 //move the planets - Does this need to be its own function???
+//-----------------------------------------------------------------
 void Planet::move(){
     xPos += xVel;
     yPos += yVel;
 }
 
+//-----------------------------------------------------------------
 vector<int> Planet::collisionCheck(vector<Planet> planets, vector<Sun> suns, int index){
+    //index is telling which planet in the vector we are checking everything else against
     vector<int> spots;
     bool destroyed = false;
     
-    for(int o = 0; o < planets.size(); o++){
-        if(o != index){
-            if(sqrt(pow(planets[index].xPos-planets[o].xPos,2) + pow(planets[index].yPos - planets[o].yPos,2)
-                    ) < (planets[index].radius + planets[o].radius)){
+    //check against all planets except self
+    for(int oo = 0; oo < planets.size(); oo++){
+        if(oo != index){
+            if(sqrt(pow(planets[index].xPos - planets[oo].xPos,2) + pow(planets[index].yPos - planets[oo].yPos,2)
+                    ) < (planets[index].radius + planets[oo].radius)){
                 spots.push_back(index);
                 destroyed = true;
-                if(index > o){
-                    spots.push_back(o);
+                if(index > oo){
+                    spots.push_back(oo);
                 }
-                else if(index < o){
-                    spots.push_back((o-1));
+                else if(index < oo){
+                    spots.push_back((oo - 1));
                 }
             }
         }
     }
-    for(int o = 0; o < suns.size(); o++){
-        if(sqrt(pow(planets[index].xPos-suns[o].xPos,2) + pow(planets[index].yPos - suns[o].yPos,2)) < (planets[index].radius + suns[o].radius)){
-            if(destroyed== false){
+    //check planet agains sun(s)
+    for(int oo = 0; oo < suns.size(); oo++){
+        if(sqrt(pow(planets[index].xPos - suns[oo].xPos, 2) + pow(planets[index].yPos - suns[oo].yPos, 2)) < (planets[index].radius + suns[oo].radius)){
+            if(destroyed == false){
                 spots.push_back(index);
             }
         }
     }
+    
+    //if planet is collided we reference which one it is by the spot in the vector and send it back to be destroyed
     return spots;
 }
 

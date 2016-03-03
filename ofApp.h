@@ -26,21 +26,21 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+        //functions for ui elements that fire when listeners are triggered
+        void planetMassChanged(int & massInput);
+        void buttonPressed();
+    
         int timeScale;
         int startX,startY,otherX,otherY;
+        int maxDrag;
         float tempX, tempY, ratio; //for planet generation velocity
         float lineX,lineY;
         int currentMass;
         bool mouseDown, maxLength;
-        void planetMassChanged(int & massInput);
-        void buttonPressed();
     
         //UI elements
         ofxPanel planetGeneration;
         ofxFloatField massInput;
-        int maxDrag;
-        string tempS;
-    
         ofxButton button;
     
 };

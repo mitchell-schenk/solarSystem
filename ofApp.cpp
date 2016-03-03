@@ -28,8 +28,6 @@ void ofApp::setup(){
     ofSetFrameRate(60);
     timeScale = 1;
     
-    //tempS = "Speed: 33"+std::to_string(timeScale);
-    
     //setup UI
     planetGeneration.setup();
     planetGeneration.add(massInput.setup("Planet Mass", 2000));
@@ -38,6 +36,7 @@ void ofApp::setup(){
     
     currentMass = massInput;
     maxLength = false;
+    maxDrag = 200;
     
     
     //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
@@ -59,7 +58,7 @@ void ofApp::setup(){
     sunOne.~Sun();
 
 }
-
+//--------------------------------------------------------------
 void ofApp::planetMassChanged(int &massInput){
      currentMass = (massInput);
 }
@@ -67,22 +66,24 @@ void ofApp::planetMassChanged(int &massInput){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    currentMass = massInput;
+    currentMass = massInput;//not in use for the text field in the future
     
     //accelerate and move planets
-    for(int i = 0; i < timeScale; i++){
-        for(int i = 0; i < planets.size(); i++){
-            indexes = planets[i].collisionCheck(planets, suns, i);//maybe add to orbits.cpp as part of Planet or Sun
+    for(int ii = 0; ii < timeScale; ii++){
+        for(int oo = 0; oo < planets.size(); oo++){
+            indexes = planets[oo].collisionCheck(planets, suns, oo);//maybe add to orbits.cpp as part of Planet or Sun
             if(indexes.size() != 0){
-                for(int z = 0; z < indexes.size(); z++){
-                    planets.erase(planets.begin()+(indexes[z]));//delete planet or planets that collided from vector
+                for(int zz = 0; zz < indexes.size(); zz++){
+                    planets.erase(planets.begin()+(indexes[zz]));//delete planet or planets that collided from vector
                 }
             }
-            planets[i].acc(planets, suns,i);//accelerate the planets on themselves and the suns
-            planets[i].move();//move planets
+            if(oo >= planets.size()){
+                break;
+            }
+            planets[oo].acc(planets, suns,oo);//accelerate the planets on themselves and the suns
+            planets[oo].move();//move planets
         }
     }
-    
 }
 
 //--------------------------------------------------------------
@@ -90,35 +91,34 @@ void ofApp::draw(){
     
     //draw framerate
     ofDrawBitmapString(ofGetFrameRate(),730,15);
-    //ofDrawBitmapString(currentMass,50,30);
     
     //draw UI elements
     planetGeneration.draw();
-    massInput.draw();
+
     
     //draw planets
-    for(int i = 0; i < planets.size(); i++)
+    for(int ii = 0; ii < planets.size(); ii++)
     {
-        ofSetColor(planets[i].colorR,planets[i].colorG,planets[i].colorB);
-        ofDrawCircle(planets[i].xPos, planets[i].yPos, planets[i].radius);
+        ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
+        ofDrawCircle(planets[ii].xPos, planets[ii].yPos, planets[ii].radius);
     }
     
     //draw Suns
-    for(int i = 0; i < suns.size(); i++)
+    for(int ii = 0; ii < suns.size(); ii++)
     {
-        ofSetColor(suns[i].colorR,suns[i].colorG,suns[i].colorB);
-        ofDrawCircle(suns[i].xPos, suns[i].yPos, suns[i].radius);
+        ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
+        ofDrawCircle(suns[ii].xPos, suns[ii].yPos, suns[ii].radius);
         
     }
     if(mouseDown){
         if(maxLength){
-            ofSetColor(255,0,0);
+            ofSetColor(0,255,0);
         }
         else{
-        ofSetColor(0,0,255);
+            ofSetColor(0,0,255);
         }
     
-        ofDrawLine(startX,startY,otherX,otherY);
+        ofDrawLine(startX, startY, otherX, otherY);
     }
     
 }
@@ -131,11 +131,6 @@ void ofApp::buttonPressed(){
     else{
         timeScale = 1;
     }
-    /*
-    tempS = "Speed: "+std::to_string(timeScale);
-    button.setName(tempS);
-    button.draw();
-     */
     
 }
 
@@ -161,22 +156,14 @@ void ofApp::mouseDragged(int x, int y, int button){
         otherX = x;
         otherY = y;
     }
-    /*
-    lineX = startX - otherX;
-    lineY = startX - otherY;
-     */
     
-    
-     if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 200){
+    //used for line drag
+     if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > maxDrag){
          maxLength = true;
      }
      else{
          maxLength = false;
      }
-    
-    
-    
-   
 }
 
 //--------------------------------------------------------------
@@ -192,12 +179,12 @@ void ofApp::mousePressed(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button){
     
-    //create plannet on mouse release
-    //need to set velocity as function of a drag or something currently fixed
-
-    if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > 200){
+//create plannet on mouse release
+    
+    //scale speed so it isnt too big
+    if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > maxDrag){
         mouseDown = false;
-        ratio = 200/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
+        ratio = maxDrag/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
         tempX = (startX - otherX) * .03 * ratio;
         tempY = (startY - otherY) * .03 * ratio;
     }
@@ -206,14 +193,16 @@ void ofApp::mouseReleased(int x, int y, int button){
         tempY = (startY - otherY) * .03;
     }
     
+    //color generation
 	srand(time(NULL));
 	int red, green, blue;
 	red = rand() % 255 + 1;
 	green = rand() % 255 + 1;
 	blue = rand() % 255 + 1;
-    Planet mars3( tempX, tempY, startX, startY, currentMass, 5, red, green, blue);
-    planets.push_back(mars3);
-    mars3.~Planet();
+    
+    Planet newPlanet( tempX, tempY, startX, startY, currentMass, 5, red, green, blue);
+    planets.push_back(newPlanet);
+    newPlanet.~Planet();
     mouseDown = false;
 }
 
