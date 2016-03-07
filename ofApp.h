@@ -37,6 +37,8 @@ class ofApp : public ofBaseApp{
         float lineX,lineY;
         int currentMass;
         bool mouseDown, maxLength;
+
+		int i = 0;
     
         //UI elements
         ofxPanel planetGeneration;

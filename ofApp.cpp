@@ -195,15 +195,19 @@ void ofApp::mouseReleased(int x, int y, int button){
     
     //color generation
 	srand(time(NULL));
-	int red, green, blue;
-	red = rand() % 255 + 1;
-	green = rand() % 255 + 1;
-	blue = rand() % 255 + 1;
-    
-    Planet newPlanet( tempX, tempY, startX, startY, currentMass, 5, red, green, blue);
+	int colorListRed (7) = {255, 255, 255, 0, 0, 0, 128, 255}
+	int colorListGreen (7) = {0, 128, 255, 255, 255, 0, 0, 0}
+	int colorListBlue (7) = {0, 0, 0, 0, 255, 255, 255, 255}
+
+	ofSetColor(colorlistRed[i], colorListGreen[i], colorListBlue[i]);
+    Planet newPlanet( tempX, tempY, startX, startY, currentMass, 5);
     planets.push_back(newPlanet);
     newPlanet.~Planet();
     mouseDown = false;
+	i++;
+	if (i = 8) {
+		i = 0;
+	}
 }
 
 //--------------------------------------------------------------
