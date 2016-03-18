@@ -31,7 +31,7 @@ void ofApp::setup(){
     //setup UI
     planetGeneration.setup();
     planetGeneration.add(massInput.setup("Planet Mass", 2000));
-    planetGeneration.add(button.setup("Speed: "+std::to_string(timeScale)));
+    planetGeneration.add(button.setup(" "));
     
     
     currentMass = massInput;
@@ -94,7 +94,8 @@ void ofApp::draw(){
     
     //draw UI elements
     planetGeneration.draw();
-
+    ofSetColor(255,255,255);
+    ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,63);
     
     //draw planets
     for(int ii = 0; ii < planets.size(); ii++)
@@ -112,10 +113,10 @@ void ofApp::draw(){
     }
     if(mouseDown){
         if(maxLength){
-            ofSetColor(0,255,0);
+            ofSetColor(255,0,0);
         }
         else{
-            ofSetColor(0,0,255);
+            ofSetColor(0,255,0);
         }
     
         ofDrawLine(startX, startY, otherX, otherY);
