@@ -193,13 +193,9 @@ void ofApp::mouseReleased(int x, int y, int button){
         tempY = (startY - otherY) * .03;
     }
     
-    //color generation
-	srand(time(NULL));
-    Planet newPlanet( tempX, tempY, startX, startY, currentMass, 5, ofRandom(0,255), ofRandom(0, 255), ofRandom(0, 255));
-	i++;
-	if (i = 8) {
-		i = 0;
-	}
+  
+
+    Planet newPlanet( tempX, tempY, startX, startY, currentMass, 5, 255, 0, 0);
     planets.push_back(newPlanet);
     newPlanet.~Planet();
     mouseDown = false;
