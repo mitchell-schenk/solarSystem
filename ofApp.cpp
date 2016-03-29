@@ -196,7 +196,7 @@ void ofApp::mouseReleased(int x, int y, int button){
     
   
 
-    Planet newPlanet( tempX, tempY, startX, startY, currentMass, 5, 255, 0, 0);
+    Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 255, 0, 0);
     planets.push_back(newPlanet);
     newPlanet.~Planet();
     mouseDown = false;
