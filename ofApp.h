@@ -42,7 +42,7 @@ class ofApp : public ofBaseApp{
     
         //UI elements
         ofxPanel planetGeneration;
-        ofxFloatField massInput;
+        //ofxFloatField massInput;
         ofxButton button;
     
 };

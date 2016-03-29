@@ -30,11 +30,11 @@ void ofApp::setup(){
     
     //setup UI
     planetGeneration.setup();
-    planetGeneration.add(massInput.setup("Planet Mass", 2000));
+    //planetGeneration.add(massInput.setup("Planet Mass", 2000));
     planetGeneration.add(button.setup(" "));
     
     
-    currentMass = massInput;
+    //currentMass = massInput;
     maxLength = false;
     maxDrag = 200;
     
@@ -66,7 +66,7 @@ void ofApp::planetMassChanged(int &massInput){
 //--------------------------------------------------------------
 void ofApp::update(){
     
-    currentMass = massInput;//not in use for the text field in the future
+    //currentMass = massInput;//not in use for the text field in the future
     
     //accelerate and move planets
     for(int ii = 0; ii < timeScale; ii++){
@@ -95,7 +95,7 @@ void ofApp::draw(){
     //draw UI elements
     planetGeneration.draw();
     ofSetColor(255,255,255);
-    ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,63);
+    ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,43);
     
     //draw planets
     for(int ii = 0; ii < planets.size(); ii++)
