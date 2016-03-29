@@ -29,8 +29,10 @@ class ofApp : public ofBaseApp{
         //functions for ui elements that fire when listeners are triggered
         void planetMassChanged(int & massInput);
         void buttonPressed();
+        void scaleButtonPressed();
     
         int timeScale;
+        string label;
         int startX,startY,otherX,otherY;
         int maxDrag;
         float tempX, tempY, ratio; //for planet generation velocity
@@ -44,6 +46,7 @@ class ofApp : public ofBaseApp{
         ofxPanel planetGeneration;
         //ofxFloatField massInput;
         ofxButton button;
+        ofxButton scaleButton;
     
 };
 

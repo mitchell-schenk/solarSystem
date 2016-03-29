@@ -22,6 +22,8 @@ void ofApp::setup(){
     
     //massInput.addListener(this, &ofApp::planetMassChanged);
     button.addListener(this, &ofApp::buttonPressed);//button listener
+    scaleButton.addListener(this, &ofApp::scaleButtonPressed);
+    label = "Small";
     
     //set background to black
     ofBackground(0,0,0);
@@ -32,6 +34,7 @@ void ofApp::setup(){
     planetGeneration.setup();
     //planetGeneration.add(massInput.setup("Planet Mass", 2000));
     planetGeneration.add(button.setup(" "));
+    planetGeneration.add(scaleButton.setup(" "));
     
     
     //currentMass = massInput;
@@ -96,6 +99,7 @@ void ofApp::draw(){
     planetGeneration.draw();
     ofSetColor(255,255,255);
     ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,43);
+    ofDrawBitmapString("Scale: "+label,32,63);
     
     //draw planets
     for(int ii = 0; ii < planets.size(); ii++)
@@ -133,6 +137,11 @@ void ofApp::buttonPressed(){
         timeScale = 1;
     }
     
+}
+
+//--------------------------------------------------------------
+void ofApp::scaleButtonPressed(){
+    //label = "Medium";
 }
 
 //--------------------------------------------------------------
