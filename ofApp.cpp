@@ -18,7 +18,7 @@ std::vector<int> indexes;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
-    
+    scale = 0;
     
     //massInput.addListener(this, &ofApp::planetMassChanged);
     button.addListener(this, &ofApp::buttonPressed);//button listener
@@ -29,6 +29,7 @@ void ofApp::setup(){
     ofBackground(0,0,0);
     ofSetFrameRate(60);
     timeScale = 1;
+    frameCount = 35;
     
     //setup UI
     planetGeneration.setup();
@@ -87,6 +88,10 @@ void ofApp::update(){
             planets[oo].move();//move planets
         }
     }
+    //To stop planet spam
+    if (frameCount < 35){
+        frameCount++;
+    }
 }
 
 //--------------------------------------------------------------
@@ -105,14 +110,14 @@ void ofApp::draw(){
     for(int ii = 0; ii < planets.size(); ii++)
     {
         ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
-        ofDrawCircle(planets[ii].xPos, planets[ii].yPos, planets[ii].radius);
+        ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
     }
     
     //draw Suns
     for(int ii = 0; ii < suns.size(); ii++)
     {
         ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
-        ofDrawCircle(suns[ii].xPos, suns[ii].yPos, suns[ii].radius);
+        ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
         
     }
     if(mouseDown){
@@ -141,7 +146,15 @@ void ofApp::buttonPressed(){
 
 //--------------------------------------------------------------
 void ofApp::scaleButtonPressed(){
-    //label = "Medium";
+    if (scale == 0){
+       scale = .5;
+        label = "Medium";
+    }
+    else if(scale == .5){
+        scale = 0;
+        label = "Small";
+    }
+    
 }
 
 //--------------------------------------------------------------
@@ -190,6 +203,8 @@ void ofApp::mousePressed(int x, int y, int button){
 void ofApp::mouseReleased(int x, int y, int button){
     
 //create plannet on mouse release
+if (frameCount >= 35)
+    {
     
     //scale speed so it isnt too big
     if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > maxDrag){
@@ -204,11 +219,19 @@ void ofApp::mouseReleased(int x, int y, int button){
     }
     
   
-
-    Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 255, 0, 0);
-    planets.push_back(newPlanet);
-    newPlanet.~Planet();
+        if (scale != 0){
+             Planet newPlanet( tempX , tempY , startX - 2*((400 - startX) * (1 - scale)), startY - 2*((400 - startY) * (1 - scale)), 2000, 5, 255, 0, 0);
+            planets.push_back(newPlanet);
+            newPlanet.~Planet();
+        }
+        else{
+             Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 255, 0, 0);
+            planets.push_back(newPlanet);
+            newPlanet.~Planet();
+        }
     mouseDown = false;
+    }
+    frameCount = 0;
 }
 
 //--------------------------------------------------------------

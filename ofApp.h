@@ -37,8 +37,9 @@ class ofApp : public ofBaseApp{
         int maxDrag;
         float tempX, tempY, ratio; //for planet generation velocity
         float lineX,lineY;
-        int currentMass;
+        int currentMass, frameCount;
         bool mouseDown, maxLength;
+        double scale;
 
 		int i = 0;
     
