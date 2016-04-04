@@ -220,7 +220,7 @@ if (frameCount >= 35)
     
   
         if (scale != 0){
-             Planet newPlanet( tempX , tempY , startX - 2*((400 - startX) * (1 - scale)), startY - 2*((400 - startY) * (1 - scale)), 2000, 5, 255, 0, 0);
+             Planet newPlanet( tempX , tempY , startX - (((400 - startX) * (1/(1-scale)))-(400-startX)), startY - (((400 - startY) * (1/(1-scale)))-(400-startY)), 2000, 5, 255, 0, 0);
             planets.push_back(newPlanet);
             newPlanet.~Planet();
         }
