@@ -225,7 +225,7 @@ if (frameCount >= 35)
             newPlanet.~Planet();
         }
         else{
-             Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 255, 0, 0);
+             Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 0, 0, 255);
             planets.push_back(newPlanet);
             newPlanet.~Planet();
         }
