@@ -18,6 +18,13 @@ std::vector<int> indexes;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    
+    
+    startBox.x = 600;
+    startBox.y = 600;
+    startBox.width = 50;
+    startBox.height = 50;
+    
     scale = 0;
     
     //massInput.addListener(this, &ofApp::planetMassChanged);
@@ -60,6 +67,10 @@ void ofApp::setup(){
     Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
     suns.push_back(sunOne);
     sunOne.~Sun();
+    
+    Sun sun2(400, 600, 10000000000, 20, 255, 255, 0);
+    suns.push_back(sun2);
+    sun2.~Sun();
 
 }
 //--------------------------------------------------------------
@@ -106,12 +117,18 @@ void ofApp::draw(){
     ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,43);
     ofDrawBitmapString("Scale: "+label,32,63);
     
+    ofSetColor(0,255,0);
+    ofDrawRectangle(startBox);
+    ofSetColor(0,0,0);
+    ofDrawRectangle(startBox.x+(startBox.width/8),startBox.y+(startBox.height/8),3*startBox.width/4,3*startBox.height/4);
+    
     //draw planets
     for(int ii = 0; ii < planets.size(); ii++)
     {
         ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
         ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
     }
+   
     
     //draw Suns
     for(int ii = 0; ii < suns.size(); ii++)
@@ -121,14 +138,15 @@ void ofApp::draw(){
         
     }
     if(mouseDown){
-        if(maxLength){
-            ofSetColor(255,0,0);
+        if(startX>=startBox.x && startX <= startBox.x+startBox.width && startY>= startBox.y && startY<= startBox.y+startBox.height){
+            if(maxLength){
+                ofSetColor(255,0,0);
+            }
+            else{
+                ofSetColor(0,255,0);
+            }
+            ofDrawLine(startX, startY, otherX, otherY);
         }
-        else{
-            ofSetColor(0,255,0);
-        }
-    
-        ofDrawLine(startX, startY, otherX, otherY);
     }
     
 }
@@ -203,33 +221,34 @@ void ofApp::mousePressed(int x, int y, int button){
 void ofApp::mouseReleased(int x, int y, int button){
     
 //create plannet on mouse release
-if (frameCount >= 35)
-    {
-    
-    //scale speed so it isnt too big
-    if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > maxDrag){
-        mouseDown = false;
-        ratio = maxDrag/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
-        tempX = (startX - otherX) * .03 * ratio;
-        tempY = (startY - otherY) * .03 * ratio;
-    }
-    else{
-        tempX = (startX - otherX) * .03;
-        tempY = (startY - otherY) * .03;
-    }
+if(startX>=startBox.x && startX <= startBox.x+startBox.width && startY>= startBox.y && startY<= startBox.y+startBox.height){
+    if (frameCount >= 35)
+        {
+            //scale speed so it isnt too big
+            if (sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY))) > maxDrag){
+                mouseDown = false;
+                ratio = maxDrag/sqrt(((startX-otherX)*(startX-otherX))+((startY-otherY)*(startY-otherY)));
+                tempX = (startX - otherX) * .03 * ratio;
+                tempY = (startY - otherY) * .03 * ratio;
+            }
+            else{
+                tempX = (startX - otherX) * .03;
+                tempY = (startY - otherY) * .03;
+            }
     
   
-        if (scale != 0){
-             Planet newPlanet( tempX , tempY , startX - (((400 - startX) * (1/(1-scale)))-(400-startX)), startY - (((400 - startY) * (1/(1-scale)))-(400-startY)), 2000, 5, 255, 0, 0);
-            planets.push_back(newPlanet);
-            newPlanet.~Planet();
+            if (scale != 0){
+                Planet newPlanet( tempX , tempY , startX - (((400 - startX) * (1/(1-scale)))-(400-startX)), startY - (((400 - startY) * (1/(1-scale)))-(400-startY)), 2000, 5, 255, 0, 0);
+                planets.push_back(newPlanet);
+                newPlanet.~Planet();
+            }
+            else{
+                Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 0, 0, 255);
+                planets.push_back(newPlanet);
+                newPlanet.~Planet();
+            }
+            mouseDown = false;
         }
-        else{
-             Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 0, 0, 255);
-            planets.push_back(newPlanet);
-            newPlanet.~Planet();
-        }
-    mouseDown = false;
     }
     frameCount = 0;
 }

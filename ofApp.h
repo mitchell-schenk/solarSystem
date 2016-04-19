@@ -48,6 +48,7 @@ class ofApp : public ofBaseApp{
         //ofxFloatField massInput;
         ofxButton button;
         ofxButton scaleButton;
+        ofRectangle startBox;
     
 };
 
