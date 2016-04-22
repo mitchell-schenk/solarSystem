@@ -25,6 +25,13 @@ void ofApp::setup(){
     startBox.width = 50;
     startBox.height = 50;
     
+    target.x = 650;
+    target.y = 100;
+    target.height = 150;
+    target.width = 7;
+    
+    passed = false;
+    
     scale = 0;
     
     //massInput.addListener(this, &ofApp::planetMassChanged);
@@ -67,10 +74,6 @@ void ofApp::setup(){
     Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
     suns.push_back(sunOne);
     sunOne.~Sun();
-    
-    Sun sun2(400, 600, 10000000000, 20, 255, 255, 0);
-    suns.push_back(sun2);
-    sun2.~Sun();
 
 }
 //--------------------------------------------------------------
@@ -97,6 +100,9 @@ void ofApp::update(){
             }
             planets[oo].acc(planets, suns,oo);//accelerate the planets on themselves and the suns
             planets[oo].move();//move planets
+            if(planets[oo].winCheck(target)){
+                loadNextLevel();
+            }
         }
     }
     //To stop planet spam
@@ -121,6 +127,8 @@ void ofApp::draw(){
     ofDrawRectangle(startBox);
     ofSetColor(0,0,0);
     ofDrawRectangle(startBox.x+(startBox.width/8),startBox.y+(startBox.height/8),3*startBox.width/4,3*startBox.height/4);
+    ofSetColor(255,0,0);
+    ofDrawRectangle(target);
     
     //draw planets
     for(int ii = 0; ii < planets.size(); ii++)
@@ -148,6 +156,10 @@ void ofApp::draw(){
             ofDrawLine(startX, startY, otherX, otherY);
         }
     }
+    if(passed){
+        ofSetColor(0,255,0);
+        ofDrawRectangle(100, 100, 50, 50);
+    }
     
 }
 //--------------------------------------------------------------
@@ -172,6 +184,11 @@ void ofApp::scaleButtonPressed(){
         scale = 0;
         label = "Small";
     }
+    
+}
+//--------------------------------------------------------------
+void ofApp::loadNextLevel(){
+    passed = true;
     
 }
 

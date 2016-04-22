@@ -113,4 +113,13 @@ vector<int> Planet::collisionCheck(vector<Planet> planets, vector<Sun> suns, int
     //if planet is collided we reference which one it is by the spot in the vector and send it back to be destroyed
     return spots;
 }
+bool Planet::winCheck(ofRectangle target){
+    if(xPos > target.x && xPos < (target.x + target.width) && yPos > target.y && yPos < (target.y + target.height)){
+        return true;
+    }
+    else{
+        return false;
+    }
+    
+}
 

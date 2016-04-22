@@ -30,6 +30,9 @@ class ofApp : public ofBaseApp{
         void planetMassChanged(int & massInput);
         void buttonPressed();
         void scaleButtonPressed();
+        void loadNextLevel();
+    
+        bool passed;
     
         int timeScale;
         string label;
@@ -49,6 +52,7 @@ class ofApp : public ofBaseApp{
         ofxButton button;
         ofxButton scaleButton;
         ofRectangle startBox;
+        ofRectangle target;
     
 };
 

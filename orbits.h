@@ -39,6 +39,7 @@ public:
     double yAcc;
     void move();
     void acc(vector<Planet>, vector<Sun>, int);
+    bool winCheck(ofRectangle);
     vector<int> collisionCheck(vector<Planet> planets, vector<Sun> suns, int index);
     //constructor
     Planet(double xVelocity, double yVelocity, double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue);
