@@ -58,6 +58,7 @@ void ofApp::setup(){
     
     
     //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
+    /*
     Planet earth(0, 1.5, 700,400,2000, 5, 255, 0, 0);
     planets.push_back(earth);
     earth.~Planet();
@@ -69,6 +70,7 @@ void ofApp::setup(){
     Planet mars2( 2, 0, 400, 100, 2000, 5, 0, 0, 255);
     planets.push_back(mars2);
     mars2.~Planet();
+     */
     
     //make sun (x, y, mass, radius, R, G, B)
     Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
