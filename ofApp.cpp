@@ -5,7 +5,10 @@
 #include <time.h>
 //#include <math.h>
 #include <iostream>
+#include <fstream>
+#include <sstream>
 #include <vector>
+#include <string>
 
 //initialize vector
 std::vector<Planet> planets;
@@ -19,7 +22,7 @@ std::vector<int> indexes;
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    
+
     startBox.x = 600;
     startBox.y = 600;
     startBox.width = 50;
@@ -158,10 +161,10 @@ void ofApp::draw(){
             ofDrawLine(startX, startY, otherX, otherY);
         }
     }
-    if(passed){
-        ofSetColor(0,255,0);
+    if(passed == true){
         ofDrawRectangle(100, 100, 50, 50);
     }
+ 
     
 }
 //--------------------------------------------------------------
@@ -190,8 +193,61 @@ void ofApp::scaleButtonPressed(){
 }
 //--------------------------------------------------------------
 void ofApp::loadNextLevel(){
-    passed = true;
     
+    planets.clear();
+    
+    ifstream myfile;
+    myfile.open(ofToDataPath("level1.txt").c_str());
+    if(myfile.is_open()){
+        ofLog(OF_LOG_NOTICE,"It worked");
+    }else{
+        ofLog(OF_LOG_NOTICE,"Failed");
+    }
+
+    if (myfile.is_open())
+    {
+        lineCount = 0;
+     
+        while ( getline (myfile,line) )
+        {
+            if(lineCount == 0){
+                scale = std::stod(line);
+            }
+            else if(lineCount == 1){
+                timeScale = std::stod(line);
+            }
+            else if(lineCount == 2){
+                std::istringstream ss(line);
+                std::string token;
+                int ii = 0;
+                while(std::getline(ss, token, ',')) {
+                    tempA[ii] = std::stod(token);
+                    ii++;
+                }
+                startBox.x = tempA[0];
+                startBox.y = tempA[1];
+                startBox.width = tempA[2];
+                startBox.height = tempA[3];
+            }
+            else if(lineCount == 3){
+                std::istringstream ss(line);
+                std::string token;
+                int ii = 0;
+                while(std::getline(ss, token, ',')) {
+                    tempA[ii] = std::stod(token);
+                    ii++;
+                }
+                target.x = tempA[0];
+                target.y = tempA[1];
+                target.width = tempA[2];
+                target.height = tempA[3];
+            }
+            lineCount++;
+        }
+     
+        myfile.close();
+    }
+   
 }
 
 //--------------------------------------------------------------

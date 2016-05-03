@@ -43,6 +43,9 @@ class ofApp : public ofBaseApp{
         int currentMass, frameCount;
         bool mouseDown, maxLength;
         double scale;
+        int lineCount;
+        string line;
+        int tempA[4] = {0,0,0,0};
 
 		int i = 0;
     
