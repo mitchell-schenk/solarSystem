@@ -16,7 +16,7 @@ public:
     int colorR;
     int colorG;
     int colorB;
-    Body(double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue);
+    Body(double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue); //Probably don't need the colors once we get textures
 };
 
 

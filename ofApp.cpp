@@ -76,9 +76,9 @@ void ofApp::setup(){
      */
     
     //make sun (x, y, mass, radius, R, G, B)
-    Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
-    suns.push_back(sunOne);
-    sunOne.~Sun();
+    //Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
+    //suns.push_back(sunOne);
+    //sunOne.~Sun();
 
 }
 //--------------------------------------------------------------
@@ -150,6 +150,8 @@ void ofApp::draw(){
         ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
         
     }
+
+	//Check if the line is inside the start box
     if(mouseDown){
         if(startX>=startBox.x && startX <= startBox.x+startBox.width && startY>= startBox.y && startY<= startBox.y+startBox.height){
             if(maxLength){
@@ -192,33 +194,32 @@ void ofApp::scaleButtonPressed(){
     
 }
 //--------------------------------------------------------------
-void ofApp::loadNextLevel(){
+void ofApp::loadNextLevel(){ 
     
-    planets.clear();
+    planets.clear(); //Clear the previous level
     
-    ifstream myfile;
+    ifstream myfile; //Open level file and check if it works
     myfile.open(ofToDataPath("level1.txt").c_str());
     if(myfile.is_open()){
         ofLog(OF_LOG_NOTICE,"It worked");
-    }else{
+    }
+	else{
         ofLog(OF_LOG_NOTICE,"Failed");
     }
 
-    if (myfile.is_open())
+    if (myfile.is_open()) //Go line by line to parse the strings from the text file
     {
         lineCount = 0;
-     
         while ( getline (myfile,line) )
         {
-            if(lineCount == 0){
+			std::istringstream ss(line);
+            if(lineCount == 0){        //Zoom scale
                 scale = std::stod(line);
             }
-            else if(lineCount == 1){
+            else if(lineCount == 1){   //Time Scale
                 timeScale = std::stod(line);
             }
-            else if(lineCount == 2){
-                std::istringstream ss(line);
-                std::string token;
+            else if(lineCount == 2){   //Get the parameters for the start box
                 int ii = 0;
                 while(std::getline(ss, token, ',')) {
                     tempA[ii] = std::stod(token);
@@ -229,9 +230,7 @@ void ofApp::loadNextLevel(){
                 startBox.width = tempA[2];
                 startBox.height = tempA[3];
             }
-            else if(lineCount == 3){
-                std::istringstream ss(line);
-                std::string token;
+            else if(lineCount == 3){  //Get the parameters for the target
                 int ii = 0;
                 while(std::getline(ss, token, ',')) {
                     tempA[ii] = std::stod(token);
@@ -242,9 +241,23 @@ void ofApp::loadNextLevel(){
                 target.width = tempA[2];
                 target.height = tempA[3];
             }
+
+			else if(line.compare(sunFlag) == 0){ //flag for suns
+				ofLog(OF_LOG_NOTICE, "sun flag");
+				sunTrigger != sunTrigger;
+			}
+			else if (sunTrigger == true) { //Get the parameters for the suns, this goes until sunTrigger is false (i.e. it hits another *)
+				int ii = 0;
+				while (std::getline(ss, token, ',')) {
+					objectDump.push_back(std::stod(token));
+					ii++;
+				}
+				Sun nextSun(objectDump[0], objectDump[1], objectDump[2], objectDump[3], objectDump[4], objectDump[5], objectDump[6]); //For reference when making objects in the text file, the order is xPos, yPos, mass, radius, then colors which me can remove later
+				suns.push_back(nextSun);
+				nextSun.~Sun();
+			}
             lineCount++;
         }
-     
         myfile.close();
     }
    

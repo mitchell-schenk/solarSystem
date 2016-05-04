@@ -2,7 +2,6 @@
 
 #include "ofMain.h"
 #include "ofxGui.h"
-#include "ofxInputField.h"
 
 
 //#include <math.h>
@@ -26,26 +25,19 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
+
         //functions for ui elements that fire when listeners are triggered
         void planetMassChanged(int & massInput);
         void buttonPressed();
-        void scaleButtonPressed();
-        void loadNextLevel();
-    
-        bool passed;
-    
-        int timeScale;
+		void scaleButtonPressed();
+   
+		//Clicking generation
         string label;
         int startX,startY,otherX,otherY;
         int maxDrag;
         float tempX, tempY, ratio; //for planet generation velocity
-        float lineX,lineY;
         int currentMass, frameCount;
         bool mouseDown, maxLength;
-        double scale;
-        int lineCount;
-        string line;
-        int tempA[4] = {0,0,0,0};
 
 		int i = 0;
     
@@ -56,7 +48,20 @@ class ofApp : public ofBaseApp{
         ofxButton scaleButton;
         ofRectangle startBox;
         ofRectangle target;
-    
+
+		//Level loading things
+		double scale;
+		int timeScale;
+		bool passed;
+		void loadNextLevel();
+		int tempA[4] = { 0,0,0,0 };
+		string line;
+		string sunFlag = "*";
+		int lineCount;
+		std::string token;
+		vector<int>objectDump;
+
+		bool sunTrigger = false;//bool trigger, use the same thing for other types
 };
 
 
