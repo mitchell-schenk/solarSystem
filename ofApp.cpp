@@ -76,9 +76,9 @@ void ofApp::setup(){
      */
     
     //make sun (x, y, mass, radius, R, G, B)
-    //Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
-    //suns.push_back(sunOne);
-    //sunOne.~Sun();
+    Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
+    suns.push_back(sunOne);
+    sunOne.~Sun();
 
 }
 //--------------------------------------------------------------
@@ -241,10 +241,9 @@ void ofApp::loadNextLevel(){
                 target.width = tempA[2];
                 target.height = tempA[3];
             }
-
 			else if(line.compare(sunFlag) == 0){ //flag for suns
 				ofLog(OF_LOG_NOTICE, "sun flag");
-				sunTrigger != sunTrigger;
+				sunTrigger = !sunTrigger;
 			}
 			else if (sunTrigger == true) { //Get the parameters for the suns, this goes until sunTrigger is false (i.e. it hits another *)
 				int ii = 0;
