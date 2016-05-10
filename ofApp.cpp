@@ -3,7 +3,6 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-//#include <math.h>
 #include <iostream>
 #include <fstream>
 #include <sstream>
@@ -16,13 +15,10 @@ std::vector<Sun> suns;
 std::vector<int> indexes;
 
 
-
-
-
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-
+    levelCount = 0;
     startBox.x = 600;
     startBox.y = 600;
     startBox.width = 50;
@@ -61,20 +57,7 @@ void ofApp::setup(){
     
     
     //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
-    /*
-    Planet earth(0, 1.5, 700,400,2000, 5, 255, 0, 0);
-    planets.push_back(earth);
-    earth.~Planet();
-    
-    Planet mars( 2, 0, 500, 200, 2000, 5, 0, 255, 0);
-    planets.push_back(mars);
-    mars.~Planet();
-    
-    Planet mars2( 2, 0, 400, 100, 2000, 5, 0, 0, 255);
-    planets.push_back(mars2);
-    mars2.~Planet();
-     */
-    
+   
     //make sun (x, y, mass, radius, R, G, B)
     Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
     suns.push_back(sunOne);
@@ -123,10 +106,12 @@ void ofApp::draw(){
     ofDrawBitmapString(ofGetFrameRate(),730,15);
     
     //draw UI elements
+    /*
     planetGeneration.draw();
     ofSetColor(255,255,255);
     ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,43);
     ofDrawBitmapString("Scale: "+label,32,63);
+     */
     
     ofSetColor(0,255,0);
     ofDrawRectangle(startBox);
@@ -195,11 +180,13 @@ void ofApp::scaleButtonPressed(){
 }
 //--------------------------------------------------------------
 void ofApp::loadNextLevel(){ 
-    
+    levelCount++;
     planets.clear(); //Clear the previous level
+    suns.clear();
+    objectDump.clear();
     
     ifstream myfile; //Open level file and check if it works
-    myfile.open(ofToDataPath("level1.txt").c_str());
+    myfile.open(ofToDataPath("level"+std::to_string(levelCount)+".txt").c_str());
     if(myfile.is_open()){
         ofLog(OF_LOG_NOTICE,"It worked");
     }
@@ -248,12 +235,24 @@ void ofApp::loadNextLevel(){
 			else if (sunTrigger == true) { //Get the parameters for the suns, this goes until sunTrigger is false (i.e. it hits another *)
 				int ii = 0;
 				while (std::getline(ss, token, ',')) {
-					objectDump.push_back(std::stod(token));
+                    if(ii == 2){
+                        objectDump.push_back(std::stoll(token));
+                    }
+                    else{
+                        objectDump.push_back(std::stod(token));
+                    }
+					
 					ii++;
 				}
+                for(int o = 0; o<objectDump.size(); o++){
+                    ofLog(OF_LOG_NOTICE,std::to_string(objectDump[o]));
+                }
+               
 				Sun nextSun(objectDump[0], objectDump[1], objectDump[2], objectDump[3], objectDump[4], objectDump[5], objectDump[6]); //For reference when making objects in the text file, the order is xPos, yPos, mass, radius, then colors which me can remove later
+                //Sun nextSun(400, 400, 10000000000, 20, 255, 255, 0);
 				suns.push_back(nextSun);
 				nextSun.~Sun();
+                
 			}
             lineCount++;
         }

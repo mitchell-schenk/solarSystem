@@ -25,7 +25,7 @@ Body::Body(double xPosition, double yPosition, double bodyMass, double bodyRadiu
 
 //Sun constructor
 //-----------------------------------------------------------------
-Sun::Sun(double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue) : Body( xPosition,  yPosition, bodyMass, bodyRadius, colorRed, colorGreen, colorBlue){
+Sun::Sun(double xPosition, double yPosition, long long bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue) : Body( xPosition,  yPosition, bodyMass, bodyRadius, colorRed, colorGreen, colorBlue){
   
 }
 

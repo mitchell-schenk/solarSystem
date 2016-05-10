@@ -38,7 +38,7 @@ class ofApp : public ofBaseApp{
         float tempX, tempY, ratio; //for planet generation velocity
         int currentMass, frameCount;
         bool mouseDown, maxLength;
-
+    
 		int i = 0;
     
         //UI elements
@@ -46,6 +46,7 @@ class ofApp : public ofBaseApp{
         //ofxFloatField massInput;
         ofxButton button;
         ofxButton scaleButton;
+    
         ofRectangle startBox;
         ofRectangle target;
 
@@ -59,8 +60,8 @@ class ofApp : public ofBaseApp{
 		string sunFlag = "*";
 		int lineCount;
 		std::string token;
-		vector<int>objectDump;
-
+		vector<long long>objectDump;
+        int levelCount;
 		bool sunTrigger = false;//bool trigger, use the same thing for other types
 };
 

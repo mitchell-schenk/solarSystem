@@ -24,7 +24,7 @@ public:
 class Sun: public Body{
 public:
     //constructor
-    Sun(double xPosition, double yPosition, double bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue);
+    Sun(double xPosition, double yPosition, long long bodyMass, double bodyRadius, int colorRed, int colorGreen, int colorBlue);
     //destructor
     ~Sun();
 };
