@@ -12,6 +12,7 @@
 //initialize vector
 std::vector<Planet> planets;
 std::vector<Sun> suns;
+std::vector<ofRectangle> boxes;
 std::vector<int> indexes;
 
 
@@ -135,6 +136,13 @@ void ofApp::draw(){
         ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
         
     }
+    for(int ii = 0; ii < boxes.size(); ii++)
+    {
+        ofSetColor(170,170,170);
+        ofDrawRectangle(boxes[ii]);
+        
+    }
+    
 
 	//Check if the line is inside the start box
     if(mouseDown){
@@ -184,6 +192,7 @@ void ofApp::loadNextLevel(){
     planets.clear(); //Clear the previous level
     suns.clear();
     objectDump.clear();
+    boxes.clear();
     
     ifstream myfile; //Open level file and check if it works
     myfile.open(ofToDataPath("level"+std::to_string(levelCount)+".txt").c_str());
@@ -200,6 +209,13 @@ void ofApp::loadNextLevel(){
         while ( getline (myfile,line) )
         {
 			std::istringstream ss(line);
+            objectDump.clear();
+            for(int j = 0; j<2; j++){
+                if(line.compare(sunFlag[j]) == 0){
+                    type = j;
+                    ofLog(OF_LOG_NOTICE, std::to_string(type));
+                }
+            }
             if(lineCount == 0){        //Zoom scale
                 scale = std::stod(line);
             }
@@ -228,10 +244,52 @@ void ofApp::loadNextLevel(){
                 target.width = tempA[2];
                 target.height = tempA[3];
             }
+            else if (type == 0 && line.compare(sunFlag[type]) != 0) { //Get the parameters for the suns, this goes until sunTrigger is false (i.e. it hits another *)
+                int ii = 0;
+                while (std::getline(ss, token, ',')) {
+                    if(ii == 2){
+                        objectDump.push_back(std::stoll(token));
+                    }
+                    else{
+                        objectDump.push_back(std::stod(token));
+                    }
+                    ii++;
+                }
+                Sun nextSun(objectDump[0], objectDump[1], objectDump[2], objectDump[3], objectDump[4], objectDump[5], objectDump[6]); //For reference when making objects in the text file, the order is xPos, yPos, mass, radius, then colors which me can remove later
+                //Sun nextSun(400, 400, 10000000000, 20, 255, 255, 0);
+                suns.push_back(nextSun);
+                nextSun.~Sun();
+            }
+            else if(type == 1 && line.compare(sunFlag[type]) != 0){
+                //obstacles
+                int ii = 0;
+                while (std::getline(ss, token, ',')) {
+                    if(ii == 2){
+                        objectDump.push_back(std::stoll(token));
+                    }
+                    else{
+                        objectDump.push_back(std::stod(token));
+                    }
+                    ii++;
+                    
+                }
+                for(int oo =0; oo < objectDump.size(); oo++)
+                {
+                    ofLog(OF_LOG_NOTICE,std::to_string(objectDump[oo]));
+                }
+                
+                ofRectangle rect(objectDump[0],objectDump[1],objectDump[2],objectDump[3]);
+                boxes.push_back(rect);
+                rect.~ofRectangle();
+
+            }
+
+            /*
 			else if(line.compare(sunFlag) == 0){ //flag for suns
 				ofLog(OF_LOG_NOTICE, "sun flag");
 				sunTrigger = !sunTrigger;
 			}
+             
 			else if (sunTrigger == true) { //Get the parameters for the suns, this goes until sunTrigger is false (i.e. it hits another *)
 				int ii = 0;
 				while (std::getline(ss, token, ',')) {
@@ -241,42 +299,33 @@ void ofApp::loadNextLevel(){
                     else{
                         objectDump.push_back(std::stod(token));
                     }
-					
 					ii++;
 				}
-                for(int o = 0; o<objectDump.size(); o++){
-                    ofLog(OF_LOG_NOTICE,std::to_string(objectDump[o]));
-                }
                
 				Sun nextSun(objectDump[0], objectDump[1], objectDump[2], objectDump[3], objectDump[4], objectDump[5], objectDump[6]); //For reference when making objects in the text file, the order is xPos, yPos, mass, radius, then colors which me can remove later
                 //Sun nextSun(400, 400, 10000000000, 20, 255, 255, 0);
 				suns.push_back(nextSun);
 				nextSun.~Sun();
-                
 			}
+             */
             lineCount++;
         }
         myfile.close();
     }
-   
 }
-
 //--------------------------------------------------------------
 void ofApp::keyPressed(int key){
 
 }
-
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key){
 
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
     
 
 }
-
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){
     if(mouseDown){

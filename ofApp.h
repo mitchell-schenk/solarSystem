@@ -55,14 +55,15 @@ class ofApp : public ofBaseApp{
 		int timeScale;
 		bool passed;
 		void loadNextLevel();
-		int tempA[4] = { 0,0,0,0 };
+		int tempA[4] = {0,0,0,0};
 		string line;
-		string sunFlag = "*";
+        string sunFlag[2] = {"*","!"};
 		int lineCount;
 		std::string token;
 		vector<long long>objectDump;
         int levelCount;
 		bool sunTrigger = false;//bool trigger, use the same thing for other types
+        int type;
 };
 
 
