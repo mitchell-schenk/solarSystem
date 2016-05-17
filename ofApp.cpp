@@ -78,7 +78,7 @@ void ofApp::update(){
     //accelerate and move planets
     for(int ii = 0; ii < timeScale; ii++){
         for(int oo = 0; oo < planets.size(); oo++){
-            indexes = planets[oo].collisionCheck(planets, suns, oo);//maybe add to orbits.cpp as part of Planet or Sun
+            indexes = planets[oo].collisionCheck(planets, suns, boxes, oo);//maybe add to orbits.cpp as part of Planet or Sun
             if(indexes.size() != 0){
                 for(int zz = 0; zz < indexes.size(); zz++){
                     planets.erase(planets.begin()+(indexes[zz]));//delete planet or planets that collided from vector

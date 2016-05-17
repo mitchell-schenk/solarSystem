@@ -80,7 +80,7 @@ void Planet::move(){
 }
 
 //-----------------------------------------------------------------
-vector<int> Planet::collisionCheck(vector<Planet> planets, vector<Sun> suns, int index){
+vector<int> Planet::collisionCheck(vector<Planet> planets, vector<Sun> suns, vector<ofRectangle> boxes, int index){
     //index is telling which planet in the vector we are checking everything else against
     vector<int> spots;
     bool destroyed = false;
@@ -106,6 +106,15 @@ vector<int> Planet::collisionCheck(vector<Planet> planets, vector<Sun> suns, int
         if(sqrt(pow(planets[index].xPos - suns[oo].xPos, 2) + pow(planets[index].yPos - suns[oo].yPos, 2)) < (planets[index].radius + suns[oo].radius)){
             if(destroyed == false){
                 spots.push_back(index);
+            }
+        }
+    }
+    for(int oo = 0; oo < boxes.size(); oo++){
+        if(xPos >= boxes[oo].x && yPos >= boxes[oo].y){
+            if(xPos <= boxes[oo].x+boxes[oo].width && yPos <= boxes[oo].y + boxes[oo].height){
+                if(destroyed == false){
+                    spots.push_back(index);
+                }
             }
         }
     }
