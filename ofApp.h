@@ -59,6 +59,25 @@ class ofApp : public ofBaseApp{
         int levelCount;
 		bool sunTrigger = false;//bool trigger, use the same thing for other types
         int type;
+
+		//textures
+		ofImage planetOne;
+		ofImage planetOne2;
+		ofImage UFO1;
+		ofImage UFOCrop;
+		ofImage teleporter;
+		ofImage teleporterCrop;
+		int UFOCookieCutter;
+		int UFOXCut;
+		int UFO1Radius;
+		int frameCounter = 0;
+		int frameCounter2 = 0;
+		int planetXCut;
+		int tempCut;
+		int planetOneRadius;
+		int teleporterCookieCutter;
+		int teleporterXCUT;
+		int teleporterRadius;
 };
 
 
