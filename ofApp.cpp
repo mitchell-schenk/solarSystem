@@ -19,24 +19,7 @@ std::vector<int> indexes;
 //--------------------------------------------------------------
 void ofApp::setup(){
     
-    levelCount = 0;
-    startBox.x = 600;
-    startBox.y = 600;
-    startBox.width = 50;
-    startBox.height = 50;
-    
-    target.x = 650;
-    target.y = 100;
-    target.height = 150;
-    target.width = 7;
-    
-    passed = false;
-    
     scale = 0;
-    
-    //massInput.addListener(this, &ofApp::planetMassChanged);
-    button.addListener(this, &ofApp::buttonPressed);//button listener
-    scaleButton.addListener(this, &ofApp::scaleButtonPressed);
     label = "Small";
     
     //set background to black
@@ -47,33 +30,20 @@ void ofApp::setup(){
     
     //setup UI
     planetGeneration.setup();
+    
     //planetGeneration.add(massInput.setup("Planet Mass", 2000));
     planetGeneration.add(button.setup(" "));
     planetGeneration.add(scaleButton.setup(" "));
-    
     
     //currentMass = massInput;
     maxLength = false;
     maxDrag = 200;
     
-    
-    //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
-   
-    //make sun (x, y, mass, radius, R, G, B)
-    Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
-    suns.push_back(sunOne);
-    sunOne.~Sun();
+    loadNextLevel();
 
 }
-//--------------------------------------------------------------
-void ofApp::planetMassChanged(int &massInput){
-     currentMass = (massInput);
-}
-
 //--------------------------------------------------------------
 void ofApp::update(){
-    
-    //currentMass = massInput;//not in use for the text field in the future
     
     //accelerate and move planets
     for(int ii = 0; ii < timeScale; ii++){
@@ -105,15 +75,7 @@ void ofApp::draw(){
     
     //draw framerate
     ofDrawBitmapString(ofGetFrameRate(),730,15);
-    
-    //draw UI elements
-    /*
-    planetGeneration.draw();
-    ofSetColor(255,255,255);
-    ofDrawBitmapString("Speed: "+std::to_string(timeScale),32,43);
-    ofDrawBitmapString("Scale: "+label,32,63);
-     */
-    
+
     ofSetColor(0,255,0);
     ofDrawRectangle(startBox);
     ofSetColor(0,0,0);
@@ -127,8 +89,6 @@ void ofApp::draw(){
         ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
         ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
     }
-   
-    
     //draw Suns
     for(int ii = 0; ii < suns.size(); ii++)
     {
@@ -136,14 +96,13 @@ void ofApp::draw(){
         ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
         
     }
+    //draw obstacles
     for(int ii = 0; ii < boxes.size(); ii++)
     {
         ofSetColor(170,170,170);
         ofDrawRectangle(boxes[ii]);
         
     }
-    
-
 	//Check if the line is inside the start box
     if(mouseDown){
         if(startX>=startBox.x && startX <= startBox.x+startBox.width && startY>= startBox.y && startY<= startBox.y+startBox.height){
@@ -156,40 +115,14 @@ void ofApp::draw(){
             ofDrawLine(startX, startY, otherX, otherY);
         }
     }
-    if(passed == true){
-        ofDrawRectangle(100, 100, 50, 50);
-    }
- 
-    
-}
-//--------------------------------------------------------------
-void ofApp::buttonPressed(){
-    
-    if(timeScale < 3){
-        timeScale++;
-    }
-    else{
-        timeScale = 1;
-    }
-    
-}
-
-//--------------------------------------------------------------
-void ofApp::scaleButtonPressed(){
-    if (scale == 0){
-       scale = .5;
-        label = "Medium";
-    }
-    else if(scale == .5){
-        scale = 0;
-        label = "Small";
-    }
     
 }
 //--------------------------------------------------------------
 void ofApp::loadNextLevel(){ 
     levelCount++;
-    planets.clear(); //Clear the previous level
+    
+    //Clear the previous level
+    planets.clear();
     suns.clear();
     objectDump.clear();
     boxes.clear();
@@ -273,41 +206,12 @@ void ofApp::loadNextLevel(){
                     ii++;
                     
                 }
-                for(int oo =0; oo < objectDump.size(); oo++)
-                {
-                    ofLog(OF_LOG_NOTICE,std::to_string(objectDump[oo]));
-                }
-                
+
                 ofRectangle rect(objectDump[0],objectDump[1],objectDump[2],objectDump[3]);
                 boxes.push_back(rect);
                 rect.~ofRectangle();
 
             }
-
-            /*
-			else if(line.compare(sunFlag) == 0){ //flag for suns
-				ofLog(OF_LOG_NOTICE, "sun flag");
-				sunTrigger = !sunTrigger;
-			}
-             
-			else if (sunTrigger == true) { //Get the parameters for the suns, this goes until sunTrigger is false (i.e. it hits another *)
-				int ii = 0;
-				while (std::getline(ss, token, ',')) {
-                    if(ii == 2){
-                        objectDump.push_back(std::stoll(token));
-                    }
-                    else{
-                        objectDump.push_back(std::stod(token));
-                    }
-					ii++;
-				}
-               
-				Sun nextSun(objectDump[0], objectDump[1], objectDump[2], objectDump[3], objectDump[4], objectDump[5], objectDump[6]); //For reference when making objects in the text file, the order is xPos, yPos, mass, radius, then colors which me can remove later
-                //Sun nextSun(400, 400, 10000000000, 20, 255, 255, 0);
-				suns.push_back(nextSun);
-				nextSun.~Sun();
-			}
-             */
             lineCount++;
         }
         myfile.close();
@@ -324,7 +228,6 @@ void ofApp::keyReleased(int key){
 //--------------------------------------------------------------
 void ofApp::mouseMoved(int x, int y ){
     
-
 }
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button){

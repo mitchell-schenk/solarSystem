@@ -25,18 +25,13 @@ class ofApp : public ofBaseApp{
 		void windowResized(int w, int h);
 		void dragEvent(ofDragInfo dragInfo);
 		void gotMessage(ofMessage msg);
-
-        //functions for ui elements that fire when listeners are triggered
-        void planetMassChanged(int & massInput);
-        void buttonPressed();
-		void scaleButtonPressed();
    
 		//Clicking generation
         string label;
         int startX,startY,otherX,otherY;
         int maxDrag;
         float tempX, tempY, ratio; //for planet generation velocity
-        int currentMass, frameCount;
+        int frameCount;
         bool mouseDown, maxLength;
     
 		int i = 0;
