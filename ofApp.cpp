@@ -44,15 +44,15 @@ void ofApp::setup(){
     
     
     //makes planet ( xVel, yVel, xPos, yPos,mass, radius, red, green, blue)
-    Planet earth(0, 1.5, 700,400,2000, 5, 255, 0, 0);
+    Planet earth(0, 1.5, 700,400,2000, 7, 255, 0, 0);
     planets.push_back(earth);
     earth.~Planet();
     
-    Planet mars( 2, 0, 500, 200, 2000, 5, 0, 255, 0);
+    Planet mars( 2, 0, 500, 200, 2000, 7, 0, 255, 0);
     planets.push_back(mars);
     mars.~Planet();
     
-    Planet mars2( 2, 0, 400, 100, 2000, 5, 0, 0, 255);
+    Planet mars2( 2, 0, 400, 100, 2000, 7, 0, 0, 255);
     planets.push_back(mars2);
     mars2.~Planet();
     
@@ -60,6 +60,13 @@ void ofApp::setup(){
     Sun sunOne(400, 400, 10000000000, 20, 255, 255, 0);
     suns.push_back(sunOne);
     sunOne.~Sun();
+
+	//load images
+	planetOne.load("images/PlanetSpriteSheet1.png");
+	frameCounter = 0;
+	UFO1.load("images/UFO1.png");
+	teleporter.load("images/teleporter.png");
+
 
 }
 //--------------------------------------------------------------
@@ -86,7 +93,31 @@ void ofApp::update(){
             }
             planets[oo].acc(planets, suns,oo);//accelerate the planets on themselves and the suns
             planets[oo].move();//move planets
+
+
         }
+		//for textures
+		frameCounter++;
+		if (frameCounter == 5) {
+			planetXCut++;
+			if (planetXCut == 127) {
+				planetXCut = 0;
+			}
+			frameCounter = 0;
+			frameCounter2++;
+			if (frameCounter2 == 3) {
+				UFOXCut++;
+				if (UFOXCut == 5) {
+					UFOXCut = 0;
+				}
+				frameCounter2 = 0;
+			}
+			teleporterXCUT++;
+			if (teleporterXCUT == 23) {
+				teleporterXCUT = 0;
+			}
+		}
+		
     }
     //To stop planet spam
     if (frameCount < 35){
@@ -109,17 +140,30 @@ void ofApp::draw(){
     //draw planets
     for(int ii = 0; ii < planets.size(); ii++)
     {
-        ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
-        ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
+        //ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
+        //ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
+		UFOCookieCutter = UFOXCut * 64;
+		UFO1Radius = (planets[ii].radius - (planets[ii].radius*scale));
+		UFOCrop.cropFrom(UFO1, UFOCookieCutter, 0, 64, 64);
+		UFOCrop.draw(planets[ii].xPos + ((400 - planets[ii].xPos) * scale) - UFO1Radius, planets[ii].yPos + ((400 - planets[ii].yPos) * scale) - UFO1Radius, 2 * UFO1Radius, 2 * UFO1Radius);
     }
     
     //draw Suns
     for(int ii = 0; ii < suns.size(); ii++)
     {
-        ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
-        ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
+        //ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
+        //ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
+		tempCut = planetXCut * 128;
+		planetOneRadius = (suns[ii].radius - (suns[ii].radius*scale));
+		planetOne2.cropFrom(planetOne, tempCut, 0, 128, 128);
+		planetOne2.draw(suns[ii].xPos + ((400 - suns[ii].xPos) * scale) - planetOneRadius, suns[ii].yPos + ((400 - suns[ii].yPos) * scale)- planetOneRadius, 2 * planetOneRadius, 2 * planetOneRadius);
         
     }
+
+	//draw teleporter
+	teleporterCookieCutter = teleporterXCUT * 128;
+	teleporterCrop.cropFrom(teleporter, teleporterCookieCutter, 0, 128, 128);
+	teleporterCrop.draw(100, 100, 64, 180);
     if(mouseDown){
         if(maxLength){
             ofSetColor(255,0,0);
@@ -220,12 +264,12 @@ if (frameCount >= 35)
     
   
         if (scale != 0){
-             Planet newPlanet( tempX , tempY , startX - (((400 - startX) * (1/(1-scale)))-(400-startX)), startY - (((400 - startY) * (1/(1-scale)))-(400-startY)), 2000, 5, 255, 0, 0);
+             Planet newPlanet( tempX , tempY , startX - (((400 - startX) * (1/(1-scale)))-(400-startX)), startY - (((400 - startY) * (1/(1-scale)))-(400-startY)), 2000, 7, 255, 0, 0);
             planets.push_back(newPlanet);
             newPlanet.~Planet();
         }
         else{
-             Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 0, 0, 255);
+             Planet newPlanet( tempX, tempY, startX, startY, 2000, 7, 0, 0, 255);
             planets.push_back(newPlanet);
             newPlanet.~Planet();
         }
