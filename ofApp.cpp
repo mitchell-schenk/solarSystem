@@ -57,6 +57,8 @@ void ofApp::setupGameState1() {
     frameCounter = 0;
     UFO1.load("images/UFO1.png");
     teleporter.load("images/teleporter.png");
+	stars.load("images/staryBackground.png");
+	motherShipSheet.load("images/motherShipSheet.png");
 
     
     
@@ -110,6 +112,15 @@ void ofApp::update(){
 		if (teleporterXCUT == 23) {
 			teleporterXCUT = 0;
 		}
+		motherShipXCut++;
+		if (motherShipXCut == 6) {
+			motherShipXCut = 0;
+		}
+		starXCut++;
+		if (starXCut == 1600) {
+			starXCut = 0;
+		}
+
 	}
 
     //To stop planet spam
@@ -163,7 +174,8 @@ void ofApp::drawGameState1(){
     //draw framerate
     ofDrawBitmapString(ofGetFrameRate(),730,15);
     
-    
+	//draw background
+	stars.draw(0, 0, 800, 800);
     //ofSetColor(255,0,0);
     //ofDrawRectangle(target);
     
@@ -204,10 +216,16 @@ void ofApp::drawGameState1(){
     teleporterCrop.cropFrom(teleporter, teleporterCookieCutter, 0, 128, 128);
     teleporterCrop.draw(target.x-32, target.y, 64, 150);
     
-    ofSetColor(0, 255, 0);
-    ofDrawRectangle(startBox);
-    ofSetColor(0, 0, 0);
-    ofDrawRectangle(startBox.x + (startBox.width / 8), startBox.y + (startBox.height / 8), 3 * startBox.width / 4, 3 * startBox.height / 4);
+	//draw spawner
+
+	motherShipCookieCutter = motherShipXCut * 128;
+	motherShipSHeetCrop.cropFrom(motherShipSheet, motherShipCookieCutter, 0, 128, 128);
+	motherShipSHeetCrop.draw(startBox.x-10, startBox.y-10, 64, 64);
+   
+	//ofSetColor(0, 255, 0);
+    //ofDrawRectangle(startBox);
+    //ofSetColor(0, 0, 0);
+    //ofDrawRectangle(startBox.x + (startBox.width / 8), startBox.y + (startBox.height / 8), 3 * startBox.width / 4, 3 * startBox.height / 4);
     
     if (mouseDown) {
         if (maxLength) {

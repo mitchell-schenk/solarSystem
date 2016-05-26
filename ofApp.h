@@ -85,6 +85,9 @@ class ofApp : public ofBaseApp{
 		ofImage UFOCrop;
 		ofImage teleporter;
 		ofImage teleporterCrop;
+		ofImage motherShipSheet;
+		ofImage motherShipSHeetCrop;
+		ofImage stars;
 		int UFOCookieCutter;
 		int UFOXCut;
 		int UFO1Radius;
@@ -96,6 +99,10 @@ class ofApp : public ofBaseApp{
 		int teleporterCookieCutter;
 		int teleporterXCUT;
 		int teleporterRadius;
+		int motherShipCookieCutter;
+		int motherShipXCut;
+		int starCookieCutter;
+		int starXCut;
     
         //Dynamic camera
         int cameraX = -400, cameraY = 400;
