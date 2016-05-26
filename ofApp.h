@@ -34,6 +34,23 @@ class ofApp : public ofBaseApp{
         int frameCount;
         bool mouseDown, maxLength;
     
+        int gameState;
+        //GameState 0
+        void setupGameState0();
+        void drawGameState0();
+        int opacity = 150;
+        string updown = "up";
+        ofTrueTypeFont mofoFont, mofoFontSmall;
+        string gameTitle = "Solar System Game";
+        string gameAuthors = "By MitDanCal";
+        string gameStart = "Click Anywhere to Start";
+    
+    
+        //GameState 1
+        void setupGameState1();
+        void drawGameState1();
+
+    
 		int i = 0;
     
         //UI elements
@@ -59,7 +76,8 @@ class ofApp : public ofBaseApp{
         int levelCount;
 		bool sunTrigger = false;//bool trigger, use the same thing for other types
         int type;
-
+    
+    
 		//textures
 		ofImage planetOne;
 		ofImage planetOne2;
@@ -78,6 +96,9 @@ class ofApp : public ofBaseApp{
 		int teleporterCookieCutter;
 		int teleporterXCUT;
 		int teleporterRadius;
+    
+        //Dynamic camera
+        int cameraX = -400, cameraY = 400;
 };
 
 

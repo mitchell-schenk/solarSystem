@@ -18,6 +18,17 @@ std::vector<int> indexes;
 
 //--------------------------------------------------------------
 void ofApp::setup(){
+    // Start menu
+    gameState = 0;
+    setupGameState0();
+}
+//--------------------------------------------------------------
+void ofApp::setupGameState0() {
+    mofoFont.loadFont("BadMofo.ttf", 50);
+    mofoFontSmall.loadFont("BadMofo.ttf", 20);
+}
+//--------------------------------------------------------------
+void ofApp::setupGameState1() {
     
     scale = 0;
     label = "Small";
@@ -40,18 +51,23 @@ void ofApp::setup(){
     maxDrag = 200;
     
     loadNextLevel();
+    
+    //load images
+    planetOne.load("images/PlanetSpriteSheet1.png");
+    frameCounter = 0;
+    UFO1.load("images/UFO1.png");
+    teleporter.load("images/teleporter.png");
 
-	//load images
-	planetOne.load("images/PlanetSpriteSheet1.png");
-	frameCounter = 0;
-	UFO1.load("images/UFO1.png");
-	teleporter.load("images/teleporter.png");
-
+    
+    
+    
+    
 }
 //--------------------------------------------------------------
 void ofApp::update(){
     
     //accelerate and move planets
+    if (gameState == 1) {
     for(int ii = 0; ii < timeScale; ii++){
         for(int oo = 0; oo < planets.size(); oo++){
             indexes = planets[oo].collisionCheck(planets, suns, boxes, oo);//maybe add to orbits.cpp as part of Planet or Sun
@@ -73,19 +89,23 @@ void ofApp::update(){
 	//for textures
 	frameCounter++;
 	if (frameCounter == 5) {
+        
 		planetXCut++;
 		if (planetXCut == 127) {
 			planetXCut = 0;
 		}
 		frameCounter = 0;
-		frameCounter2++;
-		if (frameCounter2 == 3) {
-			UFOXCut++;
-			if (UFOXCut == 5) {
-				UFOXCut = 0;
-			}
-			frameCounter2 = 0;
-		}
+
+        frameCounter2++;
+        if (frameCounter2 == 3) {
+            UFOXCut++;
+            if (UFOXCut == 5) {
+                UFOXCut = 0;
+            }
+            frameCounter2 = 0;
+        }
+		
+		
 		teleporterXCUT++;
 		if (teleporterXCUT == 23) {
 			teleporterXCUT = 0;
@@ -96,59 +116,107 @@ void ofApp::update(){
     if (frameCount < 35){
         frameCount++;
     }
+    }
+    else if (gameState == 0) {
+        if (updown == "down") {
+            opacity -= 5;
+            if (opacity <= 5) {
+                updown = "up";
+            }
+        }
+        if (updown == "up") {
+            opacity += 5;
+            if (opacity >= 250) {
+                updown = "down";
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------
 void ofApp::draw(){
+    if (gameState == 0) {
+        drawGameState0();
+    }
+    if (gameState == 1) {
+        drawGameState1();
+    }
+}
+//--------------------------------------------------------------
+void ofApp::drawGameState0() {
+    ofColor color1(0, 0, 0);
+    ofColor color2(44, 36, 60);
+    ofBackgroundGradient(color2, color1, OF_GRADIENT_CIRCULAR);
+    ofSetColor(255, 255, 255);
     
+    ofRectangle stringBounds = mofoFont.getStringBoundingBox(gameTitle, 0, 0);
+    mofoFont.drawString(gameTitle, ofGetWidth() / 2 - stringBounds.width / 2, ofGetHeight() / 2 - stringBounds.height / 2);
+    stringBounds = mofoFontSmall.getStringBoundingBox(gameAuthors, 0, 0);
+    mofoFontSmall.drawString(gameAuthors, ofGetWidth() / 2 - stringBounds.width / 2, ofGetHeight() / 2 + 10);
+    
+    ofSetColor(255,255,255, opacity);
+    stringBounds = mofoFontSmall.getStringBoundingBox(gameStart, 0, 0);
+    mofoFontSmall.drawString(gameStart, ofGetWidth() / 2 - stringBounds.width / 2, ofGetHeight() / 2 + 100);
+}
+//--------------------------------------------------------------
+void ofApp::drawGameState1(){
     //draw framerate
     ofDrawBitmapString(ofGetFrameRate(),730,15);
-
-   
+    
+    
     //ofSetColor(255,0,0);
     //ofDrawRectangle(target);
     
     //draw planets
-	for (int ii = 0; ii < planets.size(); ii++)
-	{
-		//ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
-		//ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
-		UFOCookieCutter = UFOXCut * 64;
-		UFO1Radius = (planets[ii].radius - (planets[ii].radius*scale));
-		UFOCrop.cropFrom(UFO1, UFOCookieCutter, 0, 64, 64);
-		UFOCrop.draw(planets[ii].xPos + ((400 - planets[ii].xPos) * scale) - UFO1Radius, planets[ii].yPos + ((400 - planets[ii].yPos) * scale) - UFO1Radius, 2 * UFO1Radius, 2 * UFO1Radius);
-	}
-
-	//draw Suns
-	for (int ii = 0; ii < suns.size(); ii++)
-	{
-		//ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
-		//ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
-		tempCut = planetXCut * 128;
-		planetOneRadius = (suns[ii].radius - (suns[ii].radius*scale));
-		planetOne2.cropFrom(planetOne, tempCut, 0, 128, 128);
-		planetOne2.draw(suns[ii].xPos + ((400 - suns[ii].xPos) * scale) - planetOneRadius, suns[ii].yPos + ((400 - suns[ii].yPos) * scale) - planetOneRadius, 2 * planetOneRadius, 2 * planetOneRadius);
-
-	}
-
-	//draw teleporter
-	teleporterCookieCutter = teleporterXCUT * 128;
-	teleporterCrop.cropFrom(teleporter, teleporterCookieCutter, 0, 128, 128);
-	teleporterCrop.draw(target.x-32, target.y, 64, 150);
-	
-	ofSetColor(0, 255, 0);
-	ofDrawRectangle(startBox);
-	ofSetColor(0, 0, 0);
-	ofDrawRectangle(startBox.x + (startBox.width / 8), startBox.y + (startBox.height / 8), 3 * startBox.width / 4, 3 * startBox.height / 4);
-
-	if (mouseDown) {
-		if (maxLength) {
-			ofSetColor(255, 0, 0);
-		}
-		else {
-			ofSetColor(0, 255, 0);
-		}
-	}
+    
+    for (int ii = 0; ii < planets.size(); ii++)
+    {
+        //ofSetColor(planets[ii].colorR, planets[ii].colorG, planets[ii].colorB);
+        
+        ofDrawCircle(planets[ii].xPos + ((400 - planets[ii].xPos) * scale), planets[ii].yPos + ((400 - planets[ii].yPos) * scale), planets[ii].radius - (planets[ii].radius*scale));
+        
+        UFOCookieCutter = UFOXCut * 64;
+        UFO1Radius = (planets[ii].radius - (planets[ii].radius*scale));
+        UFOCrop.cropFrom(UFO1, UFOCookieCutter, 0, 64, 64);
+        UFOCrop.draw(planets[ii].xPos + ((400 - planets[ii].xPos) * scale) - UFO1Radius, planets[ii].yPos + ((400 - planets[ii].yPos) * scale) - UFO1Radius, 2 * UFO1Radius, 2 * UFO1Radius);
+        
+        
+    }
+    
+    //draw Suns
+    for (int ii = 0; ii < suns.size(); ii++)
+    {
+        //ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
+        
+        ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
+        
+        tempCut = planetXCut * 128;
+        planetOneRadius = (suns[ii].radius - (suns[ii].radius*scale));
+        planetOne2.cropFrom(planetOne, tempCut, 0, 128, 128);
+        planetOne2.draw(suns[ii].xPos + ((400 - suns[ii].xPos) * scale) - planetOneRadius, suns[ii].yPos + ((400 - suns[ii].yPos) * scale) - planetOneRadius, 2 * planetOneRadius, 2 * planetOneRadius);
+        
+        
+    }
+    
+    //draw teleporter
+    
+    teleporterCookieCutter = teleporterXCUT * 128;
+    teleporterCrop.cropFrom(teleporter, teleporterCookieCutter, 0, 128, 128);
+    teleporterCrop.draw(target.x-32, target.y, 64, 150);
+    
+    ofSetColor(0, 255, 0);
+    ofDrawRectangle(startBox);
+    ofSetColor(0, 0, 0);
+    ofDrawRectangle(startBox.x + (startBox.width / 8), startBox.y + (startBox.height / 8), 3 * startBox.width / 4, 3 * startBox.height / 4);
+    
+    if (mouseDown) {
+        if (maxLength) {
+            ofSetColor(255, 0, 0);
+        }
+        else {
+            ofSetColor(0, 255, 0);
+        }
+    }
     //draw obstacles
     for(int ii = 0; ii < boxes.size(); ii++)
     {
@@ -156,21 +224,21 @@ void ofApp::draw(){
         ofDrawRectangle(boxes[ii]);
         
     }
-
-	
-	//Check if the line is inside the start box
+    
+    //Check if the line is inside the start box
     if(mouseDown){
         if(startX>=startBox.x && startX <= startBox.x+startBox.width && startY>= startBox.y && startY<= startBox.y+startBox.height){
             if(maxLength){
                 //ofSetColor(255,0,0);
             }
             else{
-               // ofSetColor(0,255,0);
+                // ofSetColor(0,255,0);
             }
             ofDrawLine(startX, startY, otherX, otherY);
         }
     }
     
+
 }
 //--------------------------------------------------------------
 void ofApp::loadNextLevel(){ 
@@ -303,11 +371,21 @@ void ofApp::mouseDragged(int x, int y, int button){
 //--------------------------------------------------------------
 void ofApp::mousePressed(int x, int y, int button){
     //start of drag for creating a plannet
-    startX = x;
-    startY = y;
-    otherX = x;
-    otherY = y;
-    mouseDown = true;
+    if (gameState == 1) {
+        startX = x;
+        startY = y;
+        otherX = x;
+        otherY = y;
+        mouseDown = true;
+    }
+    if (gameState == 0) {
+        if (x >= 0 && x <= 800) {
+            if (y >= 0 && y <= 800) {
+                gameState = 1;
+                setupGameState1();
+            }
+        }
+    }
 }
 
 //--------------------------------------------------------------
@@ -336,7 +414,7 @@ if(startX>=startBox.x && startX <= startBox.x+startBox.width && startY>= startBo
                 newPlanet.~Planet();
             }
             else{
-                Planet newPlanet( tempX, tempY, startX, startY, 2000, 5, 0, 0, 255);
+                Planet newPlanet( tempX, tempY, startX, startY, 2000, 7, 0, 0, 255);
                 planets.push_back(newPlanet);
                 newPlanet.~Planet();
             }
