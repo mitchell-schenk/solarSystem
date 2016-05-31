@@ -200,7 +200,7 @@ void ofApp::drawGameState1(){
     {
         //ofSetColor(suns[ii].colorR, suns[ii].colorG, suns[ii].colorB);
         
-        ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale), suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
+        ofDrawCircle(suns[ii].xPos + ((400 - suns[ii].xPos) * scale) , suns[ii].yPos + ((400 - suns[ii].yPos) * scale), suns[ii].radius - (suns[ii].radius*scale));
         
         tempCut = planetXCut * 128;
         planetOneRadius = (suns[ii].radius - (suns[ii].radius*scale));
@@ -255,6 +255,9 @@ void ofApp::drawGameState1(){
             ofDrawLine(startX, startY, otherX, otherY);
         }
     }
+    //ofSetColor(0,255,255);
+    ofDrawBitmapString(ofGetFrameRate(),730,15);
+
     
 
 }
